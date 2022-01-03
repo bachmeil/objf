@@ -1,0 +1,150 @@
+<!DOCTYPE html><head><meta charset=UTF-8><title>PouchDB Experiment</title><link rel="stylesheet" href="custom.css"></head>
+<textarea id="data" style="display:none">
+===
+_id: 20220101110650669
+type: note
+status: active
+tags: objf, overview
+---
+This project is an experiment. I do not claim it is the best solution
+for anyone for any purpose. It may well turn out to be nothing more than a pointless weekend
+project that familiarizes me with some of the underlying technology.
+
+Constraints:
+
+- **Zero overhead for someone that wants to use the information.** 
+Once you clone the repo, or otherwise obtain all of the files, all you 
+have to do is load the html file in the browser. The only dependencies
+allowed are Javascript files in the same directory and CDN libraries.
+These are allowed since they do not require any action on the part of the user.
+Notably, this rules out running a web server, the use of a database,
+processing content, or installing scripts/programs.
+- **Realistic content entry.** You do not have to write html. You don't have
+to write in plain text. Markdown format is a natural fit for this requirement,
+because it's well known and does most of what we need. There has to be
+math support, since that is a common requirement.
+- **It has to be possible to perform real database queries on the content.**
+I'm using PouchDB as an in-memory database. Querying the DOM can take you
+quite far. However, it's not always intuitive, and it has some limitations.
+PouchDB allows for the use of mango queries, similar to MongoDB.
+
+At this point, the questions are "What would something meeting these constraints
+look like?" and "How well does it scale?" I think the advantages of running
+a web server will outweigh the advantages of having a single html file,
+but I want to give it a real-world test. I have no idea at this point how
+user-friendly and efficient a system meeting these constraints can be.
+
+===
+_id: 20220101111039645
+type: note
+status: active
+tags: objf, pros
+---
+Advantages:
+
+- Low overhead. You can return to it in five years and you will not have
+to refresh your memory about anything. Simply load the file in the browser.
+Want to share it with someone else? Give them the files and tell them to
+open the .html file in the browser. They can use the queries you've set up
+for them.
+- You have a full database at your disposal.
+- The simplicity of the OBTF system, but with the ability to query.
+- You're in charge of the data. You can sync with Git, Dropbox, USB drive,
+or however you choose. It's nothing but a text file. You have a database
+without the problems of backups and syncing.
+- The use of a real in-memory database means that even complicated queries 
+can be very fast.
+
+===
+_id: 20220101171015799
+type: note
+status: active
+tags: objf, cons
+---
+Disadvantages:
+
+- Heavy on the dependencies. It loads PouchDB, the PouchDB in-memory
+database adaptor, the PouchDB search adaptor, markdown-it to process the
+markdown, markdown-it-katex for math support, and the full katex. Only the
+PouchDB libraries are necessary.
+- A lot of processing of all of the data on page load. It might be slow
+on initial load. It's intended for a high ratio of views and queries to
+loads.
+- Editing requires a text editor and knowledge of how to use the text
+editor to automate things.
+- Like the OBTF system, it's intended for a workflow where you primarily
+input items at the top of the file, and rarely edit anything other than the
+first few items. In other words, you "drop stuff in the bucket quickly" while
+you're working, and query them if you need them later. It doesn't work so well
+for other uses.
+
+===
+_id: 20220102195839591
+type: note
+status: active
+tags: objf, obtf
+---
+This system was inspired by the OBTF (one big text file system). I would
+classify that system as providing the following:
+
+- You enter notes with minimal overhead in a single text file. The primary
+goal is to record information easily.
+- Most of the time you're recording information *in case* you need it in
+the future, rather than editing.
+- It's nice to have a timeline of all past activities for things like
+revisiting a meeting with someone. It gives you the comfort of a low-cost
+archive for all your stuff. You can even track tasks and projects in the
+first few lines of the file, which is fine, since you can easily edit
+and move things around.
+
+[This is a good example of OBTF.](https://jeffhuang.com/productivity_text_file/)
+
+I've tried the OBTF system multiple times. Each time, I eventually moved 
+on to something else, in spite of saying "This time I've made the necessary
+adjustments to fix the shortcomings that caused it to collapse last time."
+Inevitably, I'd end up going deeper and further and tweak this or that,
+but it just wouldn't work.
+
+There were two problems that you can't easily address with OBTF:
+
+- You can't query things easily. How do I list all the links on a particular
+topic I've dumped into OBTF? How do I see a list of all the things I want to remind
+myself to do "someday" that I've recorded in the last six months.
+- Editing doesn't happen since you don't return to anything after about
+line 100 of the file. Some things should be edited, like noting how you
+resolved a problem or that you finished a project and stored it in Github
+somewhere.
+
+In short, the system was too limited to work for me. It was a way to dump
+things in a file to get them off my mind, but that's not what I'm after.
+If you have to use a different system for the cases where OBTF doesn't work,
+it kind of defeats the purpose of a minimalist system, since that's anti-minimalist.
+
+This system adds a real database on top of an OBTF-style system. It also
+makes it more realistic for long-term usage by allowing for metadata and
+markdown formatting. And it makes a *massive* difference if you can
+view the OBTF in a browser rather than a text editor. As much as I like
+Geany (been using it for years) I would much rather view notes in a
+browser.
+
+One final thing that doesn't have much to do with OBTF is that it's
+incredibly easy to customize this type of system for almost anything you
+want to do. Productivity and notes systems simply do not work for most
+of us because customization is so important. The only good productivity
+or notes system is the one you write for your specific use case. I think
+OBJF does as good a job in that area as any other system I've seen. It's
+powerful, yet you have complete control, without even having to know much
+to customize it for your uses.
+</textarea>
+<button onclick="typeQuery('note');">Notes</button> <br><br>
+<div id="content" class="content col2"></div>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex/dist/katex.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/markdown-it-texmath/css/texmath.min.css">
+<script src="https://cdn.jsdelivr.net/npm/markdown-it/dist/markdown-it.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/katex/dist/katex.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/markdown-it-texmath/texmath.min.js"></script>
+<script src="pouchdb-7.2.1.min.js"></script>
+<script src="pouchdb.memory.min.js"></script>
+<script src="pouchdb.find.js"></script>
+<script src="functions.js"></script>
